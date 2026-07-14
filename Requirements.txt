@@ -1,0 +1,5 @@
+openai>=1.6.1
+stability-sdk>=0.8.5
+pillow>=10.1.0
+requests>=2.31.0
+Flask==2.0.3

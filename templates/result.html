@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Meme is Ready!</title>
+    <style>
+        body {
+            background: url('/static/fr.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            min-height: 100vh;
+            position: relative;
+        }
+        .nav-arrows {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0;
+        }
+        .arrow-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .arrow-btn:hover {
+            transform: scale(1.2);
+        }
+        .meme-counter {
+            text-align: center;
+            color: white;
+            margin: 0.5rem 0;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<body>
+    <div class="container">
+        <h1>Generated Meme</h1>
+        
+        <div class="nav-arrows">
+            {% if meme_count > 1 %}
+                <a href="{{ url_for('result', meme_index=meme_index-1, meme_filenames=','.join(meme_filenames), user_prompt=user_prompt, meme_count=meme_count) }}"
+                   class="arrow-btn">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+            {% endif %}
+            
+            <div class="meme-container">
+                <img src="{{ url_for('outputs', filename=current_meme) }}" alt="Generated Meme">
+            </div>
+
+            {% if meme_count > 1 %}
+                <a href="{{ url_for('result', meme_index=meme_index+1, meme_filenames=','.join(meme_filenames), user_prompt=user_prompt, meme_count=meme_count) }}"
+                   class="arrow-btn">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            {% endif %}
+        </div>
+
+        <div class="meme-counter">
+            Meme {{ meme_index + 1 }} of {{ meme_count }}
+        </div>
+
+        <div class="action-buttons">
+            <!-- Regenerate Button -->
+            <form action="/" method="GET" style="display: contents;">
+                <input type="hidden" name="user_prompt" value="{{ user_prompt }}">
+                <input type="hidden" name="meme_count" value="{{ meme_count }}">
+                <button class="btn regenerate-btn" type="submit">
+                    <i class="fas fa-redo-alt"></i>
+                    <span>Regenerate</span>
+                </button>
+            </form>
+        
+            <!-- Download Button -->
+            <a href="{{ url_for('download', filename=current_meme) }}" class="btn download-btn">
+                <i class="fas fa-file-download"></i>
+                <span>Download</span>
+            </a>
+        </div>
+        
+    </div>
+
+    <script>
+        const memeCount = {{ meme_count }};
+        const currentIndex = {{ meme_index }};
+        const memeFilenames = JSON.parse('{{ meme_filenames | tojson | safe }}');
+        const resultUrl = "{{ url_for('result') }}";
+
+        document.querySelectorAll('.arrow-btn').forEach(arrow => {
+            arrow.addEventListener('click', (e) => {
+                e.preventDefault();
+                let newIndex = arrow.querySelector('.fa-chevron-left') ? currentIndex - 1 : currentIndex + 1;
+                
+                if (newIndex < 0) newIndex = memeCount - 1;
+                if (newIndex >= memeCount) newIndex = 0;
+
+                window.location.href = `${resultUrl}?meme_index=${newIndex}&meme_filenames=${encodeURIComponent(memeFilenames)}&user_prompt={{ user_prompt }}&meme_count=${memeCount}`;
+            });
+        });
+    </script>
+</body>
+</html>
