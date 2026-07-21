@@ -35,7 +35,7 @@ pip install --prefer-binary -r Requirements.txt
 
 4. Configure your API keys in `api_keys.ini`.
 
-### `api_keys.ini` example
+### `api_keys.ini` example:
 
 ```ini
 [Keys]
@@ -54,7 +54,7 @@ Start the server with:
 python app.py
 ```
 
-Then open:
+Then open the server:
 
 ```
 http://127.0.0.1:5000
