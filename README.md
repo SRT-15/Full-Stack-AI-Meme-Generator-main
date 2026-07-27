@@ -1,6 +1,6 @@
 # AI Meme Generator
 
-A Flask web app that generates memes by using OpenAI for the text and prompt generation, plus optional ClipDrop / StabilityAI image generation.
+A web app created using Flask that generates memes by using OpenAI for the text and prompt generation, plus optional ClipDrop / StabilityAI image generation.
 
 ## What is included in the project:
 
